@@ -1,3 +1,7 @@
+# Moodle container
+
+The purpose of this project is to create a container image for Moodle that is capable of operating at large scale.
+
 # Requirements
 
 - Docker
@@ -10,7 +14,7 @@ Start all services.
 docker compose up -d
 ```
 
-In browser, navigate to [http://moodle.local].
+In a web browser, navigate to http://moodle.localhost/ .
 
 # Scale up
 
