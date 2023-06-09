@@ -1,6 +1,9 @@
 FROM docker.io/bitnami/moodle:4.0
-RUN apt-get update --yes --quiet && \
-    apt-get install curl
+RUN install_packages curl git
+RUN git clone --depth 1 https://github.com/dthies/moodle-quizaccess_addreview.git \
+                        /opt/bitnami/moodle/mod/quiz/accessrule/addreview && \
+    chown -R daemon:root /opt/bitnami/moodle/mod/quiz/accessrule/addreview && \
+    chmod -R g+w /opt/bitnami/moodle/mod/quiz/accessrule/addreview
 COPY plugins.txt /staging/
 RUN cd /staging && \
     while read -r in out checksum install_dir; do \
@@ -12,7 +15,7 @@ RUN cd /staging && \
     done < plugins.txt && \
     cd / && \
     rm -rf /staging
-RUN apt-get autoremove --purge -y curl && \
+RUN apt-get autoremove --purge -y curl git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 COPY defaults.php /opt/bitnami/moodle/local/defaults.php
