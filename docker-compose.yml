@@ -28,6 +28,7 @@ services:
       - mariadb
     labels:
       - 'traefik.http.routers.moodle.rule=Host(`moodle.localhost`)'
+    user: '1001'
   maxima:
     image: mathinstitut/goemaxima:2023052400-latest
     restart: always
