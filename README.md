@@ -22,3 +22,10 @@ Scale up the number of Moodle instances to 2.
 ```
 docker compose up -d --scale moodle=2
 ```
+
+# Run scheduled tasks
+
+Every 60 seconds using the `watch` command.
+```
+watch -n 60 docker compose run --rm moodle php /bitnami/moodle/admin/cli/cron.php
+```
