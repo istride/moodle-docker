@@ -1,38 +1,34 @@
 version: '2'
 services:
-  mariadb:
-    image: docker.io/bitnami/mariadb:10.6
-    environment:
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_moodle
-      - MARIADB_DATABASE=bitnami_moodle
-      - MARIADB_CHARACTER_SET=utf8mb4
-      - MARIADB_COLLATE=utf8mb4_unicode_ci
-    volumes:
-      - 'idems_moodledb:/bitnami/mariadb'
   moodle:
     build:
       context: '.'
       dockerfile: Dockerfile
     environment:
-      - MOODLE_DATABASE_HOST=mariadb
-      - MOODLE_DATABASE_PORT_NUMBER=3306
-      - MOODLE_DATABASE_USER=bn_moodle
-      - MOODLE_DATABASE_NAME=bitnami_moodle
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MOODLE_SMTP_HOST=mail
-      - MOODLE_SMTP_PORT=1025
-      - MOODLE_SMTP_USER=moodle
-      - MOODLE_SMTP_PASSWORD=moodle
+      MOODLE_DATABASE_TYPE: pgsql
+      MOODLE_DATABASE_HOST: db
+      MOODLE_DATABASE_PORT_NUMBER: '5432'
+      MOODLE_DATABASE_USER: postgres
+      MOODLE_DATABASE_NAME: postgres
+      MOODLE_DATABASE_PASSWORD: pgpassword
+      MOODLE_SMTP_HOST: mail
+      MOODLE_SMTP_PORT: '1025'
+      MOODLE_SMTP_USER: moodle
+      MOODLE_SMTP_PASSWORD: moodle
     volumes:
-      - 'idems_moodlefs:/bitnami'
+      - idems_moodlefs:/bitnami
     depends_on:
-      - mariadb
+      - db
     labels:
       - 'traefik.http.routers.moodle.rule=Host(`moodle.localhost`)'
     user: '1001'
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: pgpassword
+    volumes:
+      - idems_moodledb:/var/lib/postgresql/data
   maxima:
     image: mathinstitut/goemaxima:2023052400-latest
     restart: always
