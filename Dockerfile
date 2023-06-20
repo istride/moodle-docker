@@ -1,4 +1,4 @@
-FROM docker.io/bitnami/moodle:4.0
+FROM docker.io/bitnami/moodle:4.2.1
 RUN install_packages curl git
 RUN git clone --depth 1 https://github.com/dthies/moodle-quizaccess_addreview.git \
                         /opt/bitnami/moodle/mod/quiz/accessrule/addreview && \
